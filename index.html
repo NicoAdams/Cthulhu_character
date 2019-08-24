@@ -1,0 +1,190 @@
+<head>
+  <title>Call of Cthulhu 6th ed character roller</title>
+  <style type="text/css">
+    body {
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    }
+    table {
+      font-size: 20;
+      /*border: solid black 1px;*/
+      border-collapse: collapse;
+    }
+    td {
+      padding-bottom: 15px;
+/*      border-top: 1px solid gray;
+      border-bottom: 1px solid gray;
+*/    }
+    .roll {
+      color: #BB0000;
+      text-align: left;
+      width: 70px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style='text-align: center'><i>Roll your character</i></h1>
+  <h3 style='text-align: center'>Call of Cthulhu: 6th ed, 1920's rules</h3>
+  <button type="button" style='padding:15px; margin: 10px' onclick="rollRandomCharacter()">Roll random character</button>
+  <table style="width:800px">
+    <tr>
+      <td><b>STR</b> <br>(3D6)</td>
+      <td><p class='roll' id='STR_roll'>--</p></td>
+      <td><b>DEX</b> <br>(3D6)</td>
+      <td><p class='roll' id='DEX_roll'>--</p></td>
+      <td><b>INT</b> <br>(2D6+6)</td>
+      <td><p class='roll' id='INT_roll'>--</p></td>
+      <td><b>Idea</b> <br>(5*<b>INT</b>)</td>
+      <td><p class='roll' id='Idea_roll'>--</p></td>
+    </tr>
+    <tr>
+      <td><b>CON</b> <br>(3D6)</td>
+      <td><p class='roll' id='CON_roll'>--</p></td>
+      <td><b>APP</b> <br>(3D6)</td>
+      <td><p class='roll' id='APP_roll'>--</p></td>
+      <td><b>POW</b> <br>(3D6)</td>
+      <td><p class='roll'  id='POW_roll'>--</p></td>
+      <td><b>Luck</b> <br>(5*<b>POW</b>)</td>
+      <td><p class='roll' id='Luck_roll'>--</p></td>
+    </tr>
+    <tr>
+      <td><b>SIZ</b> <br>(2D6+6)</td>
+      <td><p class='roll' id='SIZ_roll'>--</p></td>
+      <td><b>SAN</b> <br>(5*<b>POW</b>)</td>
+      <td><p class='roll' id='SAN_roll'>--</p></td>
+      <td><b>EDU</b> <br>(3D6+3)</td>
+      <td><p class='roll' id='EDU_roll'>--</p></td>
+      <td><b>Know</b> <br>(5*<b>EDU</b>)</td>
+      <td><p class='roll' id='Know_roll'>--</p></td>
+    </tr>
+    <tr>
+      <td colspan=2><b>Damage Bonus</b> <br>(see table)</td>
+      <td><p class='roll' id='Dmg_bonus'>--</p></td>
+    </tr>
+<!--     <tr>
+      <td colspan="100%">
+        <hr/>
+      </td>
+    </tr>
+ -->    <tr>
+      <td><b>Sanity Points</b> <br>(<b>SAN</b>)</td>
+      <td><p class='roll' id='SP'>--</p></td>
+      <td><b>Magic Points</b> <br>(<b>POW</b>)</td>
+      <td><p class='roll' id='MP'>--</p></td>
+      <td><b>Hit Points</b> <br>(<b>CON</b>+<b>SIZ</b>)</td>
+      <td><p class='roll' id='HP'>--</p></td>
+    </tr>
+  </table>
+
+  <p><b><i>This character is...</i></b></p>
+  <div id='character_descriptors' style='padding: 0px; margin: 0px'>
+  </div>
+
+  <script>
+    function getRoll(nD, dVal) {
+      total = 0
+      for(var i=0; i<nD; i++) {total += Math.floor(dVal*Math.random()) + 1}
+      return total      
+    }
+
+    function getD6Roll(nD6) {
+      return getRoll(nD6, 6)
+    }
+
+    function getDmgBonus(STR, SIZ){
+      v = STR+SIZ
+      if(v<12) {return '-'+getRoll(1, 6)}
+      if(v<16) {return '-'+getRoll(1, 4)}
+      if(v<24) {return 0}
+      if(v<32) {return '+'+getRoll(1, 4)}
+      if(v<40) {return '+'+getRoll(1, 6)}
+    }
+
+    function rollRandomCharacter() {
+      console.log('Hellow?')
+      STR = getD6Roll(3)
+      DEX = getD6Roll(3)
+      INT = getD6Roll(2)+6
+      CON = getD6Roll(3)
+      APP = getD6Roll(3)
+      POW = getD6Roll(3)
+      SIZ = getD6Roll(2)+6
+      EDU = getD6Roll(3)+3
+      SAN = 5*POW
+      document.getElementById('STR_roll').innerHTML = STR
+      document.getElementById('DEX_roll').innerHTML = DEX
+      document.getElementById('INT_roll').innerHTML = INT
+      document.getElementById('CON_roll').innerHTML = CON
+      document.getElementById('APP_roll').innerHTML = APP
+      document.getElementById('POW_roll').innerHTML = POW
+      document.getElementById('SIZ_roll').innerHTML = SIZ
+      document.getElementById('SAN_roll').innerHTML = SAN
+      document.getElementById('EDU_roll').innerHTML = EDU
+      document.getElementById('Idea_roll').innerHTML = 5*INT
+      document.getElementById('Luck_roll').innerHTML = 5*POW
+      document.getElementById('Know_roll').innerHTML = 5*EDU
+      document.getElementById('Dmg_bonus').innerHTML = getDmgBonus(STR, SIZ)
+      document.getElementById('SP').innerHTML = SAN
+      document.getElementById('MP').innerHTML = POW
+      document.getElementById('HP').innerHTML = CON+SIZ
+
+      // weak / strong: top & bottom 20%
+      // very weak / strong: top & bottom 5%
+
+      weak3D6 = 7
+      veryWeak3D6 = 5
+      strong3D6 = 14
+      veryStrong3D6 = 16
+
+      // weak2D6 = 4
+      // veryWeak2D6 = 2
+      // strong2D6 = 10
+      // veryStrong2D6 = 12
+
+      checks3D6 = [STR, DEX, (INT-6)*1.5, CON, APP, POW, (SIZ-6)*1.5, EDU-3, SAN/5]
+      goodStrs3D6 = [
+      'Strong',
+      'Dextrous',
+      'Intelligent',
+      'Good constitution',
+      'Pretty',
+      'Powerful',
+      'Large',
+      'Well educated',
+      'Mentally sound'
+      ]
+      badStrs3D6 = [
+      'Weak',
+      'Clumsy',
+      'Unintelligent',
+      'Poor constitution',
+      'Ugly',
+      'Powerless',
+      'Small',
+      'Poorly educated',
+      'Mentally unstable']
+      
+      descriptionText = "<p>"
+      for(var i=0; i<checks3D6.length; i++) {
+        check = checks3D6[i]
+        if(check <= veryWeak3D6) {
+          descriptionText += 'Very '+badStrs3D6[i].toLowerCase() + '<br>'
+        }
+        else if(check <= weak3D6) {
+          descriptionText += badStrs3D6[i] + '<br>'
+        }
+        else if(check >= veryStrong3D6) {
+          descriptionText += 'Very '+goodStrs3D6[i].toLowerCase() + '<br>'
+        }
+        else if(check >= strong3D6) {
+          descriptionText += goodStrs3D6[i] + '<br>'
+        }
+      }
+      descriptionText += "</p>"
+
+      console.log(descriptionText)
+
+      document.getElementById('character_descriptors').innerHTML = descriptionText
+      
+    }
+  </script>
+</body>
