@@ -3,9 +3,12 @@
   <style type="text/css">
     body {
       font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+      color: white;
+      background-color: black;
+      background-image: 'background.jpg';
     }
     table {
-      font-size: 20;
+      font-size: 18;
       /*border: solid black 1px;*/
       border-collapse: collapse;
     }
@@ -15,7 +18,7 @@
       border-bottom: 1px solid gray;
 */    }
     .roll {
-      color: #BB0000;
+      color: #DDDDFF;
       text-align: left;
       width: 70px;
     }
@@ -25,7 +28,7 @@
   <h1 style='text-align: center'><i>Roll your character</i></h1>
   <h3 style='text-align: center'>Call of Cthulhu: 6th ed, 1920's rules</h3>
   <button type="button" style='padding:15px; margin: 10px' onclick="rollRandomCharacter()">Roll random character</button>
-  <table style="width:800px">
+  <table style="width:750px">
     <tr>
       <td><b>STR</b> <br>(3D6)</td>
       <td><p class='roll' id='STR_roll'>--</p></td>
@@ -75,9 +78,11 @@
     </tr>
   </table>
 
-  <p><b><i>This character is...</i></b></p>
-  <div id='character_descriptors' style='padding: 0px; margin: 0px'>
+  <div style='font-size: 20px; margin-left:30px; margin-top:50px'>
+    <p><b><i>This character is...</i></b></p>
+    <div id='character_descriptors' style='font-size: 16px padding: 0px; margin: 0px'></div>
   </div>
+
 
   <script>
     function getRoll(nD, dVal) {
@@ -135,13 +140,18 @@
       strong3D6 = 14
       veryStrong3D6 = 16
 
-      // weak2D6 = 4
-      // veryWeak2D6 = 2
-      // strong2D6 = 10
-      // veryStrong2D6 = 12
+      weak2D6 = 4
+      veryWeak2D6 = 2
+      strong2D6 = 10
+      veryStrong2D6 = 12
 
-      checks3D6 = [STR, DEX, (INT-6)*1.5, CON, APP, POW, (SIZ-6)*1.5, EDU-3, SAN/5]
-      goodStrs3D6 = [
+      t3D6 = [weak3D6, veryWeak3D6, strong3D6, veryStrong3D6]
+      t2D6 = [weak2D6, veryWeak2D6, strong2D6, veryStrong2D6]
+
+      checks = [STR, DEX, (INT-6), CON, APP, POW, (SIZ-6), EDU-3, SAN/5]
+      checkVals = [t3D6, t3D6, t2D6, t3D6, t3D6, t3D6, t2D6, t3D6, t3D6]
+      
+      goodStrs = [
       'Strong',
       'Dextrous',
       'Intelligent',
@@ -152,7 +162,7 @@
       'Well educated',
       'Mentally sound'
       ]
-      badStrs3D6 = [
+      badStrs = [
       'Weak',
       'Clumsy',
       'Unintelligent',
@@ -164,19 +174,25 @@
       'Mentally unstable']
       
       descriptionText = "<p>"
-      for(var i=0; i<checks3D6.length; i++) {
-        check = checks3D6[i]
-        if(check <= veryWeak3D6) {
-          descriptionText += 'Very '+badStrs3D6[i].toLowerCase() + '<br>'
+      for(var i=0; i<checks.length; i++) {
+        check = checks[i]
+        
+        weak = checkVals[i][0]
+        veryWeak = checkVals[i][1]
+        strong = checkVals[i][2]
+        veryStrong = checkVals[i][3]
+
+        if(check <= veryWeak) {
+          descriptionText += 'Very '+badStrs[i].toLowerCase() + '<br>'
         }
-        else if(check <= weak3D6) {
-          descriptionText += badStrs3D6[i] + '<br>'
+        else if(check <= weak) {
+          descriptionText += badStrs[i] + '<br>'
         }
-        else if(check >= veryStrong3D6) {
-          descriptionText += 'Very '+goodStrs3D6[i].toLowerCase() + '<br>'
+        else if(check >= veryStrong) {
+          descriptionText += 'Very '+goodStrs[i].toLowerCase() + '<br>'
         }
-        else if(check >= strong3D6) {
-          descriptionText += goodStrs3D6[i] + '<br>'
+        else if(check >= strong) {
+          descriptionText += goodStrs[i] + '<br>'
         }
       }
       descriptionText += "</p>"
